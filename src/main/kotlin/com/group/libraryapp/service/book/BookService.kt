@@ -8,6 +8,7 @@ import com.group.libraryapp.domain.user.loanhistory.UserLoanStatus
 import com.group.libraryapp.dto.book.request.BookLoanRequest
 import com.group.libraryapp.dto.book.request.BookRequest
 import com.group.libraryapp.dto.book.request.BookReturnRequest
+import com.group.libraryapp.dto.book.response.BookStatResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.IllegalArgumentException
@@ -43,4 +44,33 @@ class BookService(
         user.returnBook(request.bookName)
     }
 
+    @Transactional(readOnly = true)
+    fun countLoanedBook(): Int {
+        return userLoanHistoryRepository.findAllByStatus(UserLoanStatus.LOANED).size
+    }
+
+    @Transactional(readOnly = true)
+    fun getBookStatistics(): List<BookStatResponse> {
+        return bookRepository.findAll() // List<Book> 이 나옴
+            .groupBy { book -> book.type } // Map<BookType, List<Book>> 이 나옴
+            .map { (type, books) -> BookStatResponse(type, books.size) } // List<BookStatResponse>
+    } // 이렇게 하면 밑에서 쓰였던 plusOne()도 필요없음
+
+//        tip 이것도 좋은 코드가 아님, 이유는 콜 연산자가 많아서 이해하고 유지보수하기 어려움, 그리고 mutable같이 가변리스트의 경우 실수가 생길수있음
+//        val results = mutableListOf<BookStatResponse>()
+//        val books = bookRepository.findAll()
+//        for (book in books) {
+//            results.firstOrNull { dto -> book.type == dto.type }?.plusOne()
+//                ?: results.add(BookStatResponse(book.type, 1))
+
+//            위와 같은거
+//            val targetDto = results.firstOrNull { dto -> book.type == dto.type}
+//            if (targetDto == null) {
+//                results.add(BookStatResponse(book.type,1))
+//            } else {
+//                targetDto.plusOne()
+//            }
+
+
 }
+
