@@ -46,15 +46,21 @@ class BookService(
 
     @Transactional(readOnly = true)
     fun countLoanedBook(): Int {
-        return userLoanHistoryRepository.findAllByStatus(UserLoanStatus.LOANED).size
+//        return userLoanHistoryRepository.findAllByStatus(UserLoanStatus.LOANED).size
+        return userLoanHistoryRepository.countByStatus(UserLoanStatus.LOANED).toInt()
     }
 
     @Transactional(readOnly = true)
     fun getBookStatistics(): List<BookStatResponse> {
-        return bookRepository.findAll() // List<Book> 이 나옴
-            .groupBy { book -> book.type } // Map<BookType, List<Book>> 이 나옴
-            .map { (type, books) -> BookStatResponse(type, books.size) } // List<BookStatResponse>
-    } // 이렇게 하면 밑에서 쓰였던 plusOne()도 필요없음
+        return bookRepository.getStats()
+
+    }
+
+//  sql 의 groupBy를 사용하는것이 더 나음
+//        return bookRepository.findAll() // List<Book> 이 나옴
+//            .groupBy { book -> book.type } // Map<BookType, List<Book>> 이 나옴
+//            .map { (type, books) -> BookStatResponse(type, books.size) } // List<BookStatResponse>
+//    } // 이렇게 하면 밑에서 쓰였던 plusOne()도 필요없음
 
 //        tip 이것도 좋은 코드가 아님, 이유는 콜 연산자가 많아서 이해하고 유지보수하기 어려움, 그리고 mutable같이 가변리스트의 경우 실수가 생길수있음
 //        val results = mutableListOf<BookStatResponse>()

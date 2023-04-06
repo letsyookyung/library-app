@@ -4,7 +4,7 @@ import com.group.libraryapp.domain.book.BookType
 
 data class BookStatResponse(
     val type: BookType,
-    val count: Int, // 이것도 val로 유지할 수 있음
+    val count: Long, // 이것도 val로 유지할 수 있요
 ) {
 //    fun plusOne() {
 //        count++
