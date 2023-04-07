@@ -12,6 +12,7 @@ import com.group.libraryapp.dto.book.request.BookLoanRequest
 import com.group.libraryapp.dto.book.request.BookRequest
 import com.group.libraryapp.dto.book.request.BookReturnRequest
 import com.group.libraryapp.dto.book.response.BookStatResponse
+import com.group.libraryapp.repository.book.user.loanhistory.UserLoanHistoryQuerydslRepository
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
@@ -28,6 +29,7 @@ class BookServiceTest @Autowired constructor(
     private val bookRepository: BookRepository,
     private val userRepository: UserRepository,
     private val userLoanHistoryRepository: UserLoanHistoryRepository,
+    private val userLoanHistoryQuerydslRepository: UserLoanHistoryQuerydslRepository,
 ) {
     @AfterEach
     fun deleteAll() {
